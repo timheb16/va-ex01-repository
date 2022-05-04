@@ -10,6 +10,10 @@ function print_hello_world() {
  var data_2017
  var data_2018
  var data_2019
+ var data_2016_avg
+ var data_2017_avg
+ var data_2018_avg
+ var data_2019_avg
  
  socket.on("connect", () => {
  console.log("Connected to the webserver.")
@@ -63,6 +67,7 @@ function access_data_2016() {
     //console.log(keys.length)
     let total_sum = 0
     let total_avg = 0
+    let anzahl_null = 0
     for (let i = 0; i < keys.length; i++)
     {
       let entry = data[keys[i]]
@@ -76,10 +81,18 @@ function access_data_2016() {
       }
       avg_of_entry = sum_of_entry / keys_of_entry.length
       //console.log(avg_of_entry)
+      if (avg_of_entry != 0)
+      {
       total_sum = total_sum + avg_of_entry
+      }
+      else
+      {
+        anzahl_null = anzahl_null + 1
+      }
     }
-    total_avg = total_sum / keys.length
-    console.log("total avg für jahr 2016: " + total_avg)
+    total_avg = total_sum / (keys.length - anzahl_null)
+    data_2016_avg = total_avg
+    console.log("total avg für jahr 2016: " + data_2016_avg)
   }
 
 function request_data_2017() {
@@ -94,6 +107,7 @@ function access_data_2017() {
     //console.log(keys.length)
     let total_sum = 0
     let total_avg = 0
+    let anzahl_null = 0
     for (let i = 0; i < keys.length; i++)
     {
       let entry = data[keys[i]]
@@ -107,10 +121,18 @@ function access_data_2017() {
       }
       avg_of_entry = sum_of_entry / keys_of_entry.length
       //console.log(avg_of_entry)
+      if (avg_of_entry != 0)
+      {
       total_sum = total_sum + avg_of_entry
+      }
+      else
+      {
+        anzahl_null = anzahl_null + 1
+      }
     }
-    total_avg = total_sum / keys.length
-    console.log("total avg für jahr 2017: " + total_avg)
+    total_avg = total_sum / (keys.length - anzahl_null)
+    data_2017_avg = total_avg
+    console.log("total avg für jahr 2017: " + data_2017_avg)
 }
 
 function request_data_2018() {
@@ -125,6 +147,7 @@ function access_data_2018() {
     //console.log(keys.length)
     let total_sum = 0
     let total_avg = 0
+    let anzahl_null = 0
     for (let i = 0; i < keys.length; i++)
     {
       let entry = data[keys[i]]
@@ -138,10 +161,18 @@ function access_data_2018() {
       }
       avg_of_entry = sum_of_entry / keys_of_entry.length
       //console.log(avg_of_entry)
+      if (avg_of_entry != 0)
+      {
       total_sum = total_sum + avg_of_entry
+      }
+      else
+      {
+        anzahl_null = anzahl_null + 1
+      }
     }
-    total_avg = total_sum / keys.length
-    console.log("total avg für jahr 2018: " + total_avg)
+    total_avg = total_sum / (keys.length - anzahl_null)
+    data_2018_avg = total_avg
+    console.log("total avg für jahr 2018: " + data_2018_avg)
 }
 
 function request_data_2019() {
@@ -156,6 +187,7 @@ function access_data_2019() {
     //console.log(keys.length)
     let total_sum = 0
     let total_avg = 0
+    let anzahl_null = 0
     for (let i = 0; i < keys.length; i++)
     {
       let entry = data[keys[i]]
@@ -169,8 +201,28 @@ function access_data_2019() {
       }
       avg_of_entry = sum_of_entry / keys_of_entry.length
       //console.log(avg_of_entry)
+      if (avg_of_entry != 0)
+      {
       total_sum = total_sum + avg_of_entry
+      }
+      else
+      {
+        anzahl_null = anzahl_null + 1
+      }
     }
-    total_avg = total_sum / keys.length
-    console.log("total avg für jahr 2019: " + total_avg)
+    total_avg = total_sum / (keys.length - anzahl_null)
+    data_2019_avg = total_avg
+    console.log("total avg für jahr 2019: " + data_2019_avg)
+}
+
+function averages(){
+  console.log(data_2016_avg)
+  console.log(data_2017_avg)
+  console.log(data_2018_avg)
+  console.log(data_2019_avg)
+  document.getElementById("avg_2016").innerHTML = data_2016_avg
+  document.getElementById("avg_2017").innerHTML = data_2017_avg
+  document.getElementById("avg_2018").innerHTML = data_2018_avg
+  document.getElementById("avg_2019").innerHTML = data_2019_avg
+  document.getElementById("table").hidden = false
 }
