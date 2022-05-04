@@ -8,17 +8,17 @@ const express = require("express")
 const app = express()
 app.use(express.static("public"))
 const server = app.listen(port)
-console.log("Webserver is running on port ${port}.")
+console.log(`Webserver is running on port ${port}.`)
 
 
 const socket = require("socket.io")
 const io = socket(server)
 
 io.sockets.on("connection", (socket) => {
-console.log("Client ${socket.id} connected.")
+console.log(`Client ${socket.id} connected.`)
 
 let disconnect = () => {
-console.log("Client ${socket.id} disconnected.")
+console.log(`Client ${socket.id} disconnected.`)
 }
 
 let get_station_data = (parameters) => {
