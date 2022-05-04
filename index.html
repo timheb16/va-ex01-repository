@@ -19,53 +19,17 @@
       />
       <div class="buttons">
 
-        <button class="function_button" onclick="request_station_data()">Get Station Data</button>
+        <button class="function_button" onclick="request_data()">Read in data</button>
 
-        <button class="function_button" onclick="access_station_data()">Access Station Data</button>
+        <button class="function_button" onclick="access_data()">Process Data</button>
 
-        <button class="function_button" onclick="request_data_2016()">Get Data 2016</button>
-
-        <button class="function_button" onclick="access_data_2016()">Access Data 2016</button>
-
-        <button class="function_button" onclick="request_data_2017()">Get Data 2017</button>
-
-        <button class="function_button" onclick="access_data_2017()">Access Data 2017</button>
-
-        <button class="function_button" onclick="request_data_2018()">Get Data 2018</button>
-
-        <button class="function_button" onclick="access_data_2018()">Access Data 2018</button>
-
-        <button class="function_button" onclick="request_data_2019()">Get Data 2019</button>
-
-        <button class="function_button" onclick="access_data_2019()">Access Data 2019</button>
-
-        <button class="function_button" onclick="averages()">Print averages</button>
+        <button class="function_button" onclick="drawVis()">Make Vis</button>
 
       </div>
     </div>
-    <div class="content" hidden="true" id="table">
-      <table>
-        <tr>
-          <th>Jahr</th>
-          <th>Avg Feinstaub</th>
-        </tr>
-        <tr>
-          <td>2016</td>
-          <td id="avg_2016"></td>
-        </tr>
-        <tr>
-          <td>2017</td>
-          <td id="avg_2017"></td>
-        </tr>
-        <tr>
-          <td>2018</td>
-          <td id="avg_2018"></td>
-        </tr>
-        <tr>
-          <td>2019</td>
-          <td id="avg_2019"></td>
-        </tr>
-      </table>
+    <div id="container">
+      <svg id="svgRoot">
+      </svg>
     </div>
   </body>
 </html>
