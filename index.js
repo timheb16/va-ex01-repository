@@ -238,8 +238,8 @@ function drawVis(){
       avg_value: data_2019_avg
     },
     ]
-    let width = parseInt(svg.style("width")) / 4
-    let height = parseInt(svg.style("height"))
+    let width = parseInt(svg.style("width")) 
+    let height = parseInt(svg.style("height")) - margin.bottom;
 
     let scale_x = d3
      .scaleBand()
@@ -264,7 +264,7 @@ function drawVis(){
      //.attr("height", (d) => scale_y(0) - scale_y(d.avg_value))
      .attr("height", (d) => height - margin.bottom - scale_y(0))
      .attr("y", (d) => scale_y(0))
-     .attr("fill", "darkslategrey")
+     .attr("fill", "#69b3a2")
 
      g_xAxis
      .attr("transform", "translate(0, " + (height - margin.bottom) + ")")
@@ -278,10 +278,10 @@ function drawVis(){
 
      svg.selectAll("rect")
     .transition()
-    .duration(800)
+    .duration(600)
     .attr("y", (d) => height - margin.bottom - (scale_y(0) - scale_y(d.avg_value)))
     .attr("height", function(d) { return height - margin.bottom - scale_y(d.avg_value); })
-    .delay(500)
+    .delay(300)
 
 }
 
@@ -296,7 +296,7 @@ function addAxisTitle(axisTitles, width, height) {
     .text((d) => d)
     .attr("transform", (d, i) => {
       if (i > 0) {
-        return `translate(${width / 2}, ${height -15})`
+        return `translate(${width / 2}, ${height})`
       } else {
         return `translate(25, ${height / 2 + 75}) rotate(-90)`
       }
@@ -306,3 +306,106 @@ function addAxisTitle(axisTitles, width, height) {
 
   axisTitle.exit().remove()
 }
+
+function paintHistogram() {
+  socket.emit("paint_histogram", {example_parameter : "hi"})
+}
+
+socket.on("visualisation", (obj) => {
+  var values = Object.keys(obj).map(function(key) {return obj[key].avg;});
+  let min = d3.min(values)
+  let max = d3.max(values)
+  let domain = [min, max];
+  let nBin = 50; //number of bins
+  //console.log(d3.min(values))
+  // set the dimensions and margins of the graph
+  const margin = {top: 75, right: 75, bottom: 100, left: 60},
+  width = parseInt(d3.select("#histogram").style("width")) - margin.left - margin.right,
+  height = parseInt(d3.select("#histogram").style("height")) - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  const svg = d3.select("#histogram")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // X axis: scale and draw:
+  const x = d3.scaleLinear()
+      .domain([0,30])
+      .range([0, width]);
+  
+  // set the parameters for the histogram
+  const histogram = d3.histogram()
+      .domain(x.domain())  // then the domain of the graphic
+      .thresholds(x.ticks(nBin)); // then the numbers of bins
+  // And apply this function to data to get the bins
+  const bins = histogram(values);
+  //add the x-axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  //add x-label
+  svg.append("text")             
+    .attr("transform",
+          "translate(" + (width/2) + " ," + 
+                         (height + margin.top - 15) + ")")
+    .style("text-anchor", "middle")
+    .text("Average particulate measurements");
+
+  // Y axis: scale and draw:
+  const y = d3.scaleLinear()
+      .range([height, 0]);
+      y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+  svg.append("g")
+      .call(d3.axisLeft(y));
+  //add y-label
+ svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Counts");
+
+  // append the bar rectangles to the svg element
+  /*
+  svg.selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#69b3a2")
+*/
+  svg.selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(0); })
+        .style("fill", "#69b3a2")
+
+  //add titel
+  svg.append("text")
+      .attr("x", (width / 2))             
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")  
+      .style("font-size", "20px")   
+      .text("Distribution of station averages in 2019"); 
+
+  svg.selectAll("rect")
+    .transition()
+    .duration(600)
+    //.attr("y", (d) => y(d.bins))
+    .attr("y", (d) => height - margin.bottom - (y(0) - y(d.lengh)))
+    .attr("height", function(d) { return height - y(d.length); })
+    .delay(300)
+})
+

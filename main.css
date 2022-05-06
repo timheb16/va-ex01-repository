@@ -74,7 +74,24 @@ body {
 }
 
 #container {
-  display: inline;
+  width: 100%;
+  overflow: hidden;
+  /*
   grid-template-rows: 50% auto;
-  grid-template-columns: 80px auto;
+  grid-template-columns: 50% auto;
+  grid-template-areas: "svgRoot histogram";
+  */
+ 
+
+}
+
+#histogram {
+    overflow: hidden; /* if you don't want #second to wrap below #first */
+    height: 100%;
+
+}
+
+#svgRoot{
+  width: 50%;
+  float:left; /* add this */
 }

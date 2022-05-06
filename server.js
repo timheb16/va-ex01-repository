@@ -86,7 +86,35 @@ let get_data_2019 = (parameters) => {
     })
 }
 
+let visualisation = () => {
+    console.log("Received request")
+    //const string = 'Visualisation'
+    //socket.emit("visualisation", string)
+    var json_data = fs.readFileSync("../data_01/Feinstaub_2019.json", "utf8")
+    var datafile = JSON.parse(json_data)
+    let data = datafile.data
+    let keys = Object.keys(data)
+    var avgs = {};
+    for (let i = 0; i < keys.length; i++){
+        let entry = data[keys[i]]
+        let keys_of_entry = Object.keys(entry)
+        let sum = 0
+        for (let j = 0; j < keys_of_entry.length; j++){
+            let item = entry[keys_of_entry[j]]
+            sum = sum + item[2]
+            avg = sum/keys_of_entry.length
+            if (avg != 0){
+                avgs[i] = {avg};
+            }
+        }
 
+    }
+    socket.emit("visualisation", avgs)
+    
+
+}
+
+socket.on("paint_histogram", visualisation)
     
 
 socket.on("disconnect", disconnect)
